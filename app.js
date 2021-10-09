@@ -19,7 +19,7 @@ app.use(cors());
 app.options("*", cors());
 
 // middleware
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(morgan('tiny'));
 app.use(authJwt());
 app.use(errorHandler)

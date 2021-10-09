@@ -1,7 +1,6 @@
 const Category = require("../models/category");
 const _ = require("lodash");
 
-// get categories
 async function getCategories(req, res) {
   const categories = await Category.find();
 
@@ -12,11 +11,12 @@ async function getCategories(req, res) {
   res.send(categories);
 }
 
-// add new category
-async function addCategory(req, res) {
 
-  if(req.files.icon)
-  const uniqueIconName = await storIconImage(req.files.icon, __dirname);
+async function addCategory(req, res) {
+  let uniqueIconName = '';
+  if(req.files.icon){
+     uniqueIconName = await storIconImage(req.files.icon, __dirname);
+  }
 
   const category = new Category({
     name: req.body.name,
@@ -30,10 +30,11 @@ async function addCategory(req, res) {
 
 async function updateCategory(req, res) {
 
-  if(req.files.icon)
+  if(req.files.icon){
     const category = Category.findById(req.params.id);
     fs.unlink(__dirname + "/uploads/" + category.image);
     const uniqueIconName = await storeImage(req.files.icon, __dirname);
+  }
 
   const category = await Category.findByIdAndUpdate(
     req.params.id,
@@ -54,6 +55,7 @@ async function updateCategory(req, res) {
   }
 }
 
+
 async function getCategoryDetails(req, res) {
   const category = await Category.findById(req.params.id);
   if (category) {
@@ -64,6 +66,7 @@ async function getCategoryDetails(req, res) {
       .json({ success: false, error: "Category not found" });
   }
 }
+
 
 async function deleteCategory(req, res) {
   await Category.findByIdAndRemove(req.params.id)
